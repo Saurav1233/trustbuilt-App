@@ -1,0 +1,24 @@
+.env
+venv/
+db.sqlite3
+
+# ── Backend ───────────────────────────────
+trustbuilt_backend/.env
+trustbuilt_backend/venv/
+trustbuilt_backend/db.sqlite3
+trustbuilt_backend/__pycache__/
+trustbuilt_backend/**/__pycache__/
+trustbuilt_backend/*.pyc
+trustbuilt_backend/staticfiles/
+trustbuilt_backend/*.log
+
+# ── Frontend ──────────────────────────────
+trustbuilt_frontend/node_modules/
+trustbuilt_frontend/dist/
+trustbuilt_frontend/.env.local
+trustbuilt_frontend/.env.production
+
+# ── OS Files ──────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
