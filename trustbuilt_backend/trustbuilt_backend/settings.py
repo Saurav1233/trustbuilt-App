@@ -115,3 +115,18 @@ SIMPLE_JWT = {
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
 }
+
+# ── Production Settings ───────────────────
+import os
+import dj_database_url
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Insert WhiteNoise after SecurityMiddleware
+if 'whitenoise.middleware.WhiteNoiseMiddleware' not in MIDDLEWARE:
+    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+
+# Use DATABASE_URL if available (Railway PostgreSQL)
+if os.environ.get('DATABASE_URL'):
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600)
