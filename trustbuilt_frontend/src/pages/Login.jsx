@@ -35,13 +35,27 @@ export default function Login() {
     setLoading(true);
     setApiError('');
     try {
+      // Step 1: Get tokens
       const { data } = await login({ email: form.email, password: form.password });
-      loginUser({ access: data.access, refresh: data.refresh }, null);
+  
+      // Step 2: Save tokens
+      localStorage.setItem('access_token', data.access);
+      localStorage.setItem('refresh_token', data.refresh);
+  
+      // Step 3: Fetch full profile (includes is_staff)
       const profileRes = await getProfile();
+  
+      // Step 4: Set user in context
       loginUser({ access: data.access, refresh: data.refresh }, profileRes.data);
-      navigate(from, { replace: true });
+  
+      // Step 5: Redirect based on role
+      if (profileRes.data.is_staff) {
+        navigate('/admin-panel');
+      } else {
+        navigate(from, { replace: true });
+      }
     } catch (err) {
-      const msg = err.response?.data?.detail || 'Invalid email or password. Please try again.';
+      const msg = err.response?.data?.detail || err.message || 'Invalid email or password.';
       setApiError(msg);
     } finally {
       setLoading(false);

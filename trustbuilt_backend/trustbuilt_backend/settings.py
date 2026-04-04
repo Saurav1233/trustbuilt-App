@@ -132,3 +132,13 @@ if os.environ.get('DATABASE_URL'):
         default=os.environ.get('DATABASE_URL'),
         conn_max_age=600
     )
+    
+# Tell SimpleJWT to use email instead of username
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+}
