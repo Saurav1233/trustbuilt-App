@@ -13,7 +13,7 @@ User = get_user_model()
 try:
     user = User.objects.get(username='admin')
     user.email = 'trustbuilt2026@gmail.com'
-    user.set_password('Admin@123456')
+    user.set_password('Admin@2026')
     user.is_staff = True
     user.is_superuser = True
     user.save()
