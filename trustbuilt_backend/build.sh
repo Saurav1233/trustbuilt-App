@@ -9,7 +9,7 @@ python manage.py shell -c "
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
-# Update existing admin or create new one
+# Update whichever admin exists
 try:
     user = User.objects.get(username='admin')
     user.email = 'trustbuilt2026@gmail.com'
@@ -17,12 +17,12 @@ try:
     user.is_staff = True
     user.is_superuser = True
     user.save()
-    print('Superuser updated successfully')
+    print('✅ Admin updated: trustbuilt2026@gmail.com / Admin@2026')
 except User.DoesNotExist:
     User.objects.create_superuser(
         username='admin',
         email='trustbuilt2026@gmail.com',
-        password='Admin@123456'
+        password='Admin@2026'
     )
-    print('Superuser created successfully')
+    print('✅ Admin created: trustbuilt2026@gmail.com / Admin@2026')
 "
