@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { getServices, getTestimonials } from '../api/auth';
+import ConsultationForm from '../components/ConsultationForm';
 
 const iconMap = {
   megaphone: (
@@ -36,70 +37,59 @@ const iconMap = {
   ),
 };
 
-const fadeUp = { hidden: { opacity: 0, y: 40 }, show: { opacity: 1, y: 0 } };
+const fadeUp  = { hidden: { opacity: 0, y: 40 }, show: { opacity: 1, y: 0 } };
 const stagger = { show: { transition: { staggerChildren: 0.12 } } };
 
 export default function Home() {
   const FALLBACK_SERVICES = [
-    { id: 1, title: 'Public Relations', description: 'Strategic PR campaigns that build and protect your brand reputation.', icon: 'megaphone' },
-    { id: 2, title: 'Social Media Management', description: 'Engaging content and community management across all platforms.', icon: 'share' },
-    { id: 3, title: 'Meta & Google Ads', description: 'Performance-driven ad campaigns with measurable ROI.', icon: 'target' },
-    { id: 4, title: 'Branding & Design', description: 'Visual identities that leave a lasting impression.', icon: 'palette' },
-    { id: 5, title: 'Video Production', description: 'Cinematic brand films, reels, and content that captivates.', icon: 'video' },
-    { id: 6, title: 'Reputation Management', description: 'Protect and strengthen your online reputation proactively.', icon: 'shield' },
-    { id: 7, title: 'Google Ads', description: 'Search and display campaigns that put your brand in front of the right customers.', icon: 'target' },
+    { id: 1, title: 'Public Relations',       description: 'Strategic PR campaigns that build and protect your brand reputation.',             icon: 'megaphone' },
+    { id: 2, title: 'Social Media Management',description: 'Engaging content and community management across all platforms.',                   icon: 'share'     },
+    { id: 3, title: 'Meta & Google Ads',      description: 'Performance-driven ad campaigns with measurable ROI.',                              icon: 'target'    },
+    { id: 4, title: 'Branding & Design',      description: 'Visual identities that leave a lasting impression.',                                icon: 'palette'   },
+    { id: 5, title: 'Video Production',       description: 'Cinematic brand films, reels, and content that captivates.',                        icon: 'video'     },
+    { id: 6, title: 'Reputation Management',  description: 'Protect and strengthen your online reputation proactively.',                        icon: 'shield'    },
+    { id: 7, title: 'Google Ads',             description: 'Search and display campaigns that put your brand in front of the right customers.', icon: 'target'    },
   ];
-  
+
   const FALLBACK_TESTIMONIALS = [
-    { id: 1, name: 'Rahul Sharma', role: 'Founder, StartUp Rewa', review: 'Trust Built transformed our social media presence. Our engagement went up by 300% in just 2 months!', rating: 5 },
-    { id: 2, name: 'Priya Kapoor', role: 'CEO, Fashion House', review: 'Their PR strategy helped us get featured in 3 major publications. The brand credibility we gained is invaluable.', rating: 5 },
-    { id: 3, name: 'Anil Mishra', role: 'Owner, Retail Chain', review: 'Meta Ads managed by Trust Built gave us 6x return on ad spend. They target the right audience every time.', rating: 5 },
+    { id: 1, name: 'Rahul Sharma',  role: 'Founder, StartUp Rewa',  review: 'Trust Built transformed our social media presence. Our engagement went up by 300% in just 2 months!',                          rating: 5 },
+    { id: 2, name: 'Priya Kapoor', role: 'CEO, Fashion House',      review: 'Their PR strategy helped us get featured in 3 major publications. The brand credibility we gained is invaluable.',              rating: 5 },
+    { id: 3, name: 'Anil Mishra',  role: 'Owner, Retail Chain',     review: 'Meta Ads managed by Trust Built gave us 6x return on ad spend. They target the right audience every time.',                     rating: 5 },
   ];
-  
-  const [services, setServices] = useState(FALLBACK_SERVICES);
+
+  const [services,     setServices]     = useState(FALLBACK_SERVICES);
   const [testimonials, setTestimonials] = useState(FALLBACK_TESTIMONIALS);
-  const [apiLoaded, setApiLoaded] = useState(false);
-  
+  const [showConsult,  setShowConsult]  = useState(false);  // ← NEW
+
   useEffect(() => {
-    // Try to load from backend
     getServices()
-      .then(r => {
-        // Only replace fallback if API returns actual data
-        if (Array.isArray(r.data) && r.data.length > 0) {
-          setServices(r.data); // loads ALL services from DB — no limit
-          setApiLoaded(true);
-        }
-      })
-      .catch(() => {
-        // Backend offline — fallback data stays shown
-        console.warn('Backend offline — showing fallback services');
-      });
-  
+      .then(r => { if (Array.isArray(r.data) && r.data.length > 0) setServices(r.data); })
+      .catch(() => {});
     getTestimonials()
-      .then(r => {
-        if (Array.isArray(r.data) && r.data.length > 0) {
-          setTestimonials(r.data); // loads ALL testimonials from DB
-        }
-      })
+      .then(r => { if (Array.isArray(r.data) && r.data.length > 0) setTestimonials(r.data); })
       .catch(() => {});
   }, []);
 
   const stats = [
-    { value: '150+', label: 'Clients Served' },
-    { value: '7+', label: 'Services Offered' },
-    { value: '2', label: 'Cities, One Vision' },
-    { value: '5×', label: 'Average ROI' },
+    { value: '150+', label: 'Clients Served'    },
+    { value: '7+',   label: 'Services Offered'  },
+    { value: '2',    label: 'Cities, One Vision' },
+    { value: '5×',   label: 'Average ROI'        },
   ];
 
   const whyUs = [
-    { icon: '⚡', title: 'Fast Execution', desc: 'We move fast without compromising quality, delivering results within defined timelines.' },
-    { icon: '📊', title: 'Data-Driven Strategy', desc: 'Every decision is backed by analytics and real market insights for maximum ROI.' },
-    { icon: '🎯', title: 'Dedicated Support', desc: 'A dedicated account manager and team who truly care about your brand success.' },
-    { icon: '🌐', title: 'Local + National Reach', desc: 'Deep local roots in Rewa + national expertise from our Bangalore team.' },
+    { icon: '⚡', title: 'Fast Execution',        desc: 'We move fast without compromising quality, delivering results within defined timelines.' },
+    { icon: '📊', title: 'Data-Driven Strategy',  desc: 'Every decision is backed by analytics and real market insights for maximum ROI.'        },
+    { icon: '🎯', title: 'Dedicated Support',      desc: 'A dedicated account manager and team who truly care about your brand success.'          },
+    { icon: '🌐', title: 'Local + National Reach', desc: 'Deep local roots in Rewa + national expertise from our Bangalore team.'                 },
   ];
 
   return (
     <div className="min-h-screen bg-dark-900">
+
+      {/* ── Consultation Modal ─────────────────────────────────────────────── */}
+      {showConsult && <ConsultationForm onClose={() => setShowConsult(false)} />}
+
       {/* Hero */}
       <section className="relative min-h-screen flex items-center px-4 sm:px-6 lg:px-8 overflow-hidden">
         {/* BG effects */}
@@ -121,12 +111,12 @@ export default function Home() {
 
             <motion.h1 variants={fadeUp}
               className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight mb-6">
-              We Build Brands That{' '}
+              Build a Brand
+              <br />
               <span className="gold-text">People Trust</span>
             </motion.h1>
 
-            <motion.p variants={fadeUp}
-              className="text-gray-400 text-lg sm:text-xl leading-relaxed mb-4 max-w-2xl">
+            <motion.p variants={fadeUp} className="text-gray-400 text-lg sm:text-xl leading-relaxed mb-4 max-w-2xl">
               PR & Digital Marketing Agency based in Rewa & Bangalore — helping startups and businesses grow with strategy, creativity, and data.
             </motion.p>
 
@@ -136,9 +126,13 @@ export default function Home() {
             </motion.p>
 
             <motion.div variants={fadeUp} className="flex flex-wrap gap-4">
-              <Link to="/contact" className="btn-gold text-base px-8 py-3.5">
+              {/* ── CHANGED: was <Link to="/contact"> — now opens the modal ── */}
+              <button
+                onClick={() => setShowConsult(true)}
+                className="btn-gold text-base px-8 py-3.5"
+              >
                 Get Free Consultation
-              </Link>
+              </button>
               <Link to="/services" className="btn-outline text-base px-8 py-3.5">
                 Explore Services
               </Link>
@@ -184,7 +178,7 @@ export default function Home() {
               </motion.div>
             ))}
 
-            {/* CTA Card */}
+            {/* CTA Card — also opens modal */}
             <motion.div variants={fadeUp}
               className="bg-gradient-to-br from-green-900/40 to-green-800/20 border border-green-700/30
                          rounded-2xl p-6 flex flex-col justify-between">
@@ -192,9 +186,13 @@ export default function Home() {
                 <h3 className="font-display text-xl font-semibold mb-2 text-white">Ready to grow your brand?</h3>
                 <p className="text-gray-400 text-sm">Let's talk strategy, no strings attached.</p>
               </div>
-              <Link to="/contact" className="mt-6 btn-gold inline-block text-center text-sm">
+              {/* ── CHANGED: was <Link to="/contact"> — now opens the modal ── */}
+              <button
+                onClick={() => setShowConsult(true)}
+                className="mt-6 btn-gold inline-block text-center text-sm"
+              >
                 Talk to Us
-              </Link>
+              </button>
             </motion.div>
           </motion.div>
         </div>
@@ -231,10 +229,10 @@ export default function Home() {
             viewport={{ once: true }} transition={{ duration: 0.7 }}
             className="grid grid-cols-2 gap-4">
             {[
-              { value: '150+', label: 'Happy Clients' },
-              { value: '5×', label: 'Average ROI' },
-              { value: '3 Yrs', label: 'Industry Experience' },
-              { value: '98%', label: 'Client Retention' },
+              { value: '150+', label: 'Happy Clients'             },
+              { value: '5×',   label: 'Average ROI'               },
+              { value: '3 Yrs',label: 'Industry Experience'       },
+              { value: '98%',  label: 'Client Retention'          },
               { value: '2 Cities', label: 'Rewa & Bangalore Operations', full: true },
             ].map(m => (
               <div key={m.label}
