@@ -1,10 +1,14 @@
 from pathlib import Path
 from datetime import timedelta
+import os
+import dj_database_url
+from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = 'django-insecure-trustbuilt-change-in-production-abc123xyz'
-DEBUG = True
-ALLOWED_HOSTS = ['*']
+
+SECRET_KEY    = config('SECRET_KEY', default='django-insecure-change-me-in-production')
+DEBUG         = config('DEBUG', default=False, cast=bool)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -20,7 +24,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',  
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -51,22 +55,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'trustbuilt_backend.wsgi.application'
 
-# Database - SQLite for dev, PostgreSQL for production
+# ── Database ──────────────────────────────────────────────────────────────────
+# SQLite for local dev; PostgreSQL on Render via DATABASE_URL env var
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-    # PostgreSQL config (uncomment for production):
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'trustbuilt_db',
-    #     'USER': 'trustbuilt_user',
-    #     'PASSWORD': 'your_secure_password',
-    #     'HOST': 'localhost',
-    #     'PORT': '5432',
-    # }
 }
+
+if os.environ.get('DATABASE_URL'):
+    DATABASES['default'] = dj_database_url.config(
+        default=os.environ.get('DATABASE_URL'),
+        conn_max_age=600,
+    )
 
 AUTH_USER_MODEL = 'api.User'
 
@@ -78,18 +80,21 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'Asia/Kolkata'
-USE_I18N = True
-USE_TZ = True
+TIME_ZONE     = 'Asia/Kolkata'
+USE_I18N      = True
+USE_TZ        = True
 
-STATIC_URL = 'static/'
+STATIC_URL    = 'static/'
+STATIC_ROOT   = BASE_DIR / 'staticfiles'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-from decouple import config
-# CORS
-CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', default='http://localhost:5173').split(',')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-CORS_ALLOW_ALL_ORIGINS = True  # temporary fix — remove after testing
+# ── CORS ──────────────────────────────────────────────────────────────────────
+CORS_ALLOWED_ORIGINS = config(
+    'CORS_ALLOWED_ORIGINS',
+    default='http://localhost:5173'
+).split(',')
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -105,7 +110,7 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
 ]
 
-# DRF
+# ── DRF ───────────────────────────────────────────────────────────────────────
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -118,40 +123,28 @@ REST_FRAMEWORK = {
     ],
 }
 
-# JWT
+# ── JWT ───────────────────────────────────────────────────────────────────────
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'ACCESS_TOKEN_LIFETIME':  timedelta(hours=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
-    'ROTATE_REFRESH_TOKENS': True,
+    'ROTATE_REFRESH_TOKENS':  True,
     'BLACKLIST_AFTER_ROTATION': False,
     'AUTH_HEADER_TYPES': ('Bearer',),
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
 }
 
-import os
-import dj_database_url
+# ── Email (Gmail SMTP) ────────────────────────────────────────────────────────
+# Set ALL of these in Render → Environment Variables
+EMAIL_BACKEND       = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST          = 'smtp.gmail.com'
+EMAIL_PORT          = 587
+EMAIL_USE_TLS       = True
+EMAIL_HOST_USER     = config('EMAIL_HOST_USER',     default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')  # Gmail App Password
+DEFAULT_FROM_EMAIL  = config('DEFAULT_FROM_EMAIL',  default=EMAIL_HOST_USER)
 
-# Static files
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-if 'whitenoise.middleware.WhiteNoiseMiddleware' not in MIDDLEWARE:
-    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
-
-# PostgreSQL from Render
-if os.environ.get('DATABASE_URL'):
-    DATABASES['default'] = dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
-        conn_max_age=600
-    )
-    
-# Tell SimpleJWT to use email instead of username
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
-    'ROTATE_REFRESH_TOKENS': True,
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'USER_ID_FIELD': 'id',
-    'USER_ID_CLAIM': 'user_id',
-}
+# ── Admin notification targets ────────────────────────────────────────────────
+ADMIN_NOTIFY_EMAIL     = config('ADMIN_NOTIFY_EMAIL',     default=EMAIL_HOST_USER)
+ADMIN_WHATSAPP_NUMBER  = config('ADMIN_WHATSAPP_NUMBER',  default='917067570038')
+# Format: country code + number, no +, no spaces. e.g. 917067570038

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Service, Testimonial, Contact
+from .models import Service, Testimonial, Contact, Consultation
 
 User = get_user_model()
 
@@ -54,3 +54,20 @@ class ContactSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Contact
         fields = ['id', 'name', 'email', 'phone', 'service_interest', 'message', 'inquiry_type']
+
+
+# ── NEW: Consultation ─────────────────────────────────────────────────────────
+
+class ConsultationSerializer(serializers.ModelSerializer):
+    name    = serializers.CharField(max_length=200, error_messages={'blank': 'Name is required.'})
+    email   = serializers.EmailField(error_messages={'blank': 'Email is required.', 'invalid': 'Enter a valid email.'})
+    phone   = serializers.CharField(max_length=20, error_messages={'blank': 'Phone number is required.'})
+    message = serializers.CharField(min_length=10, error_messages={
+        'blank':     'Message is required.',
+        'min_length': 'Message must be at least 10 characters.',
+    })
+
+    class Meta:
+        model  = Consultation
+        fields = ['id', 'name', 'email', 'phone', 'message', 'created_at']
+        read_only_fields = ['id', 'created_at']
