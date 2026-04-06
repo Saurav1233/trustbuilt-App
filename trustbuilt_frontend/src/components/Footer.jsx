@@ -37,8 +37,8 @@ export default function Footer() {
           <div>
             <h4 className="text-gold-400 font-semibold mb-4 text-sm uppercase tracking-wider">Contact</h4>
             <div className="space-y-2 text-gray-400 text-sm">
-              <div>+91 98765 43210</div>
-              <div>hello@trustbuilt.in</div>
+              <div>+91 70675 70038</div>
+              <div>trustbuilt2026@gmail.com</div>
               <div>Rewa, Madhya Pradesh &<br/>Bangalore, Karnataka</div>
             </div>
           </div>
