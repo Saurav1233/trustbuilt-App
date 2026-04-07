@@ -95,11 +95,11 @@ export default function AdminPanel() {
         getAdminStats(), getAdminUsers(), getAdminMessages(),
         adminGetServices(), adminGetTestimonials(),
       ]);
-      setStats(sRes.data);
-      setUsers(uRes.data);
-      setMessages(mRes.data);
-      setServices(svRes.data);
-      setTestimonials(tRes.data);
+      setStats(sRes.data || null);
+      setUsers(Array.isArray(uRes.data) ? uRes.data : []);
+      setMessages(Array.isArray(mRes.data) ? mRes.data : []);
+      setServices(Array.isArray(svRes.data) ? svRes.data : []);
+      setTestimonials(Array.isArray(tRes.data) ? tRes.data : []);
     } catch (e) { console.error(e); }
     finally { setLoading(false); }
   };
@@ -162,9 +162,10 @@ export default function AdminPanel() {
     setDeleteTarget(null);
   };
 
+  const safeMessages = Array.isArray(messages) ? messages : [];
   const filteredMessages = msgFilter === 'all'
-    ? messages
-    : messages.filter(m => m.inquiry_type === msgFilter);
+    ? safeMessages
+    : safeMessages.filter(m => m.inquiry_type === msgFilter);
 
   if (loading) return (
     <div className="min-h-screen bg-dark-900 flex items-center justify-center">
@@ -221,7 +222,7 @@ export default function AdminPanel() {
                 { label: 'Total Messages',      value: stats.total_messages,       icon: '✉️', color: 'from-teal-900/40 to-teal-800/20',      border: 'border-teal-700/30' },
                 { label: 'General Messages',    value: stats.general_messages,     icon: '💬', color: 'from-pink-900/40 to-pink-800/20',      border: 'border-pink-700/30' },
                 { label: 'Resolved',            value: stats.resolved,             icon: '✅', color: 'from-emerald-900/40 to-emerald-800/20', border: 'border-emerald-700/30' },
-                { label: 'Active Services',     value: services.filter(s => s.is_active).length, icon: '🚀', color: 'from-orange-900/40 to-orange-800/20', border: 'border-orange-700/30' },
+                { label: 'Active Services',     value: (Array.isArray(services) ? services : []).filter(s => s.is_active).length, icon: '🚀', color: 'from-orange-900/40 to-orange-800/20', border: 'border-orange-700/30' },
               ].map(s => (
                 <div key={s.label} className={`bg-gradient-to-br ${s.color} border ${s.border} rounded-2xl p-5`}>
                   <div className="text-2xl mb-2">{s.icon}</div>
