@@ -92,7 +92,7 @@ Service: {contact.service_interest or "Not specified"}
 Message:
 {contact.message}
 
-View in Admin Panel: https://trustbuilt.vercel.app/admin-panel
+View in Admin Panel: https://trustbuilt-app-noas.vercel.app/admin-panel
                     ''',
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[settings.ADMIN_NOTIFY_EMAIL],
@@ -144,7 +144,7 @@ View in Admin Panel: https://trustbuilt.vercel.app/admin-panel
                 message=email_body,
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[admin_email],
-                fail_silently=False,
+                fail_silently=True,
             )
         except Exception as e:
             # Log but don't fail the request — data is already saved
