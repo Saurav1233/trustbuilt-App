@@ -153,4 +153,4 @@ else:
 # ── Admin notification targets ────────────────────────────────────────────────
 ADMIN_NOTIFY_EMAIL     = config('ADMIN_NOTIFY_EMAIL',     default=EMAIL_HOST_USER)
 ADMIN_WHATSAPP_NUMBER  = config('ADMIN_WHATSAPP_NUMBER',  default='917067570038')
-# Format: country code + number, no +, no spaces. e.g. 917067570038
+# Format: country code + number, no +, no spaces. e.g. 917067570038 
