@@ -101,6 +101,32 @@ const servicesData = [
     process: ['Brand audit & sentiment analysis', 'Review monitoring setup', 'Response strategy creation', 'Negative content suppression', 'Positive PR amplification'],
     results: ['4.8★ avg. review rating achieved', '24/7 brand monitoring', 'Negative results suppressed in 30 days'],
   },
+
+  // ── NEW: Website Creation ─────────────────────────────────────────────────
+  {
+    id: 8,
+    tab: 'Website Creation',
+    icon: (
+      <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0H3" />
+      </svg>
+    ),
+    headline: 'Your brand deserves a powerful online presence',
+    tagline: 'Fast, beautiful, and conversion-optimised websites built for growth.',
+    description: 'We design and develop professional websites that not only look stunning but are built to convert visitors into customers. From landing pages to full business websites and e-commerce stores, every pixel is crafted with purpose — fast loading, mobile-first, and SEO-ready from day one.',
+    process: [
+      'Discovery & requirement gathering',
+      'UI/UX wireframe & design',
+      'Responsive development',
+      'SEO & performance optimisation',
+      'Launch, training & ongoing support',
+    ],
+    results: [
+      'Delivered in 7–14 days',
+      '90+ Google PageSpeed score',
+      'Mobile-first & SEO optimised',
+    ],
+  },
 ];
 
 export default function Services() {
@@ -222,7 +248,7 @@ export default function Services() {
       <section className="section-pad pt-4 pb-16">
         <div className="max-w-6xl mx-auto">
           <p className="text-gray-500 text-sm uppercase tracking-widest mb-6 text-center">Other Services</p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
             {servicesData.filter(s => s.id !== active).map(s => (
               <button key={s.id} onClick={() => setActive(s.id)}
                 className="card-dark flex flex-col items-center gap-3 py-5 px-3 hover:scale-[1.04] transition-transform text-center group">
