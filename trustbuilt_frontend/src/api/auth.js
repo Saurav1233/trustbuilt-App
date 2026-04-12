@@ -17,8 +17,12 @@ export const submitConsultation = (data) => api.post('/consultation/', data);
 // Admin — Stats & Users
 export const getAdminStats       = ()           => api.get('/admin/stats/');
 export const getAdminUsers       = ()           => api.get('/admin/users/');
+export const deleteAdminUser     = (id)         => api.delete(`/admin/users/${id}/`);
 export const getAdminMessages    = (type)       => api.get('/admin/messages/', { params: type ? { type } : {} });
 export const updateMessageStatus = (id, status) => api.patch(`/admin/messages/${id}/`, { status });
+
+// User — My Messages
+export const getUserMessages     = ()           => api.get('/my-messages/');
 
 // Admin — Services CRUD
 export const adminGetServices   = ()         => api.get('/admin/services/');

@@ -20,8 +20,12 @@ urlpatterns = [
     path('consultation/',  views.ConsultationCreateView.as_view(), name='consultation'),
 
     # Admin — Stats & Users
-    path('admin/stats/',   views.AdminStatsView.as_view(),      name='admin-stats'),
-    path('admin/users/',   views.AdminUsersView.as_view(),      name='admin-users'),
+    path('admin/stats/',          views.AdminStatsView.as_view(),      name='admin-stats'),
+    path('admin/users/',          views.AdminUsersView.as_view(),      name='admin-users'),
+    path('admin/users/<int:pk>/', views.AdminUsersView.as_view(),      name='admin-user-delete'),
+
+    # User — My Messages
+    path('my-messages/',          views.UserMessagesView.as_view(),    name='my-messages'),
 
     # Admin — Messages
     path('admin/messages/',          views.AdminMessagesView.as_view(),      name='admin-messages'),

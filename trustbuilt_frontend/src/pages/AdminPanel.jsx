@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import {
   getAdminStats, getAdminUsers, getAdminMessages, updateMessageStatus,
+  deleteAdminUser,
   adminGetServices, adminCreateService, adminUpdateService, adminDeleteService,
   adminGetTestimonials, adminCreateTestimonial, adminUpdateTestimonial, adminDeleteTestimonial,
 } from '../api/auth';
@@ -102,6 +103,15 @@ export default function AdminPanel() {
       setTestimonials(Array.isArray(tRes.data) ? tRes.data : []);
     } catch (e) { console.error(e); }
     finally { setLoading(false); }
+  };
+
+  const deleteUser = async (userId) => {
+    if (!window.confirm('Are you sure you want to delete this user? This cannot be undone.')) return;
+    try {
+      await deleteAdminUser(userId);
+      setUsers(prev => prev.filter(u => u.id !== userId));
+      if (selectedUser?.id === userId) setSelectedUser(null);
+    } catch (e) { console.error(e); }
   };
 
   const handleStatusChange = async (id, newStatus) => {
@@ -297,6 +307,12 @@ export default function AdminPanel() {
                         <div className={`text-xs mt-0.5 ${u.is_active ? 'text-green-400' : 'text-red-400'}`}>
                           {u.is_active ? '● Active' : '● Inactive'}
                         </div>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); deleteUser(u.id); }}
+                          className="mt-1.5 text-xs text-red-400 hover:text-red-300 transition-colors"
+                        >
+                          🗑️ Delete
+                        </button>
                       </div>
                     </div>
                   </div>

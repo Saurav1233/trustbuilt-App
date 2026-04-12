@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 from django.conf import settings
 from urllib.parse import quote
+import requests as http_requests
 from .models import Service, Testimonial, Contact, Consultation
 from .serializers import (
     UserRegistrationSerializer, UserProfileSerializer,
@@ -150,6 +151,29 @@ View in Admin Panel: https://trustbuilt.vercel.app/admin-panel
             # Log but don't fail the request — data is already saved
             print(f"[ConsultationView] Email send failed: {e}")
 
+        # ── 3. Send WhatsApp notification via CallMeBot ───────────────────────
+        callmebot_api_key   = getattr(settings, 'CALLMEBOT_API_KEY', '')
+        admin_whatsapp_number = getattr(settings, 'ADMIN_WHATSAPP_NUMBER', '917067570038')
+
+        if callmebot_api_key:
+            try:
+                wa_message = (
+                    f"New Consultation Request!\n"
+                    f"Name: {consultation.name}\n"
+                    f"Email: {consultation.email}\n"
+                    f"Phone: {consultation.phone}\n"
+                    f"Message: {consultation.message}"
+                )
+                callmebot_url = (
+                    f"https://api.callmebot.com/whatsapp.php"
+                    f"?phone={admin_whatsapp_number}"
+                    f"&text={quote(wa_message)}"
+                    f"&apikey={callmebot_api_key}"
+                )
+                http_requests.get(callmebot_url, timeout=10)
+            except Exception as e:
+                print(f"[ConsultationView] WhatsApp send failed: {e}")
+
         # ── 2. Build WhatsApp link ────────────────────────────────────────────
         admin_whatsapp_number = getattr(settings, 'ADMIN_WHATSAPP_NUMBER', '917067570038')
         wa_text = (
@@ -170,6 +194,24 @@ View in Admin Panel: https://trustbuilt.vercel.app/admin-panel
             'message':      'Consultation request received! We will contact you within 24 hours.',
             'whatsapp_url': whatsapp_url,
         }, status=status.HTTP_201_CREATED)
+
+
+# ── User: My Messages ────────────────────────────────────────────────────────
+
+class UserMessagesView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        messages = Contact.objects.filter(email=request.user.email).order_by('-created_at')
+        return Response([{
+            'id':               m.id,
+            'name':             m.name,
+            'service_interest': m.service_interest,
+            'message':          m.message,
+            'inquiry_type':     m.inquiry_type,
+            'status':           m.status,
+            'created_at':       m.created_at.strftime('%d %b %Y, %I:%M %p'),
+        } for m in messages])
 
 
 # ── Admin Permission ──────────────────────────────────────────────────────────
@@ -231,6 +273,14 @@ class AdminUsersView(APIView):
                 } for m in messages],
             })
         return Response(data)
+
+    def delete(self, request, pk):
+        try:
+            user = User.objects.get(pk=pk, is_staff=False)
+            user.delete()
+            return Response({'message': 'User deleted successfully.'}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found.'}, status=404)
 
 
 # ── Admin Messages ────────────────────────────────────────────────────────────
