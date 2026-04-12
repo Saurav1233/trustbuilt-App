@@ -5,10 +5,25 @@ import { submitContact } from '../api/auth';
 import { useAuth } from '../context/AuthContext';
 
 const services = [
-  'Public Relations', 'Social Media Management', 'Meta Ads',
-  'Google Ads', 'Branding & Design', 'Video Production',
-  'Reputation Management', 'Franchise Inquiry', 'Website Creation',
-  'Skill Based Courses', 'Other',
+  'Public Relations',
+  'Social Media Management',
+  'Meta Ads',
+  'Google Ads',
+  'Branding & Design',
+  'Video Production',
+  'Reputation Management',
+  'Website Creation',
+  'Skill Based Courses - Graphics Designing',
+  'Skill Based Courses - Video Editing',
+  'Skill Based Courses - Front Office',
+  'Skill Based Courses - Field Marketing',
+  'Skill Based Courses - Public Relations',
+  'Skill Based Courses - Brand Management',
+  'Skill Based Courses - Social Media Managing',
+  'Skill Based Courses - Anchoring & Content Writing',
+  'Skill Based Courses - Voice Over',
+  'Franchise Inquiry',
+  'Other',
 ];
 
 export default function Contact() {
@@ -22,8 +37,8 @@ export default function Contact() {
   const [success,  setSuccess]  = useState('');
   const [apiError, setApiError] = useState('');
 
-  // Not logged in — show login prompt
-  if (!authLoading && !user) { {
+  // Not logged in
+  if (!authLoading && !user) {
     return (
       <div className="min-h-screen bg-dark-900 pt-20 flex items-center justify-center px-4">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
