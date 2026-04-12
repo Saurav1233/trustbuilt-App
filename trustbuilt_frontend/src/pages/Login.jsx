@@ -87,7 +87,7 @@ export default function Login() {
             </motion.div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5" autoComplete="off">
 
             {/* Email */}
             <div>
@@ -97,6 +97,7 @@ export default function Login() {
                 value={form.email}
                 onChange={handleChange('email')}
                 placeholder="you@example.com"
+                autoComplete="off"
                 className={`input-field ${errors.email ? 'border-red-500 focus:border-red-500' : ''}`}
               />
               {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email}</p>}
@@ -110,6 +111,7 @@ export default function Login() {
                 value={form.password}
                 onChange={handleChange('password')}
                 placeholder="••••••••"
+                autoComplete="new-password"
                 className={`input-field ${errors.password ? 'border-red-500 focus:border-red-500' : ''}`}
               />
               {errors.password && <p className="text-red-400 text-xs mt-1">{errors.password}</p>}
