@@ -7,11 +7,12 @@ import { useAuth } from '../context/AuthContext';
 const services = [
   'Public Relations', 'Social Media Management', 'Meta Ads',
   'Google Ads', 'Branding & Design', 'Video Production',
-  'Reputation Management', 'Franchise Inquiry', 'Other',
+  'Reputation Management', 'Franchise Inquiry', 'Website Creation',
+  'Skill Based Courses', 'Other',
 ];
 
 export default function Contact() {
-  const { user, loading } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({
     name: '', phone: '', email: '', service_interest: '', message: '', inquiry_type: 'consultation',
@@ -22,7 +23,7 @@ export default function Contact() {
   const [apiError, setApiError] = useState('');
 
   // Not logged in — show login prompt
-  if (!loading && !user) {
+  if (!authLoading && !user) { {
     return (
       <div className="min-h-screen bg-dark-900 pt-20 flex items-center justify-center px-4">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
