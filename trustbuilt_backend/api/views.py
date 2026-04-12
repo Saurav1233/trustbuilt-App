@@ -73,7 +73,7 @@ class TestimonialListView(generics.ListAPIView):
 
 class ContactCreateView(generics.CreateAPIView):
     serializer_class   = ContactSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]  # ← require login
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -111,7 +111,7 @@ View in Admin Panel: https://trustbuilt-app-noas.vercel.app/admin-panel
 # ── NEW: Consultation Request ─────────────────────────────────────────────────
 
 class ConsultationCreateView(APIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]  # ← require login
 
     def post(self, request):
         serializer = ConsultationSerializer(data=request.data)

@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { submitConsultation } from '../api/auth';
+import { useAuth } from '../context/AuthContext';
 
 const initialForm = { name: '', email: '', phone: '', message: '' };
 
 export default function ConsultationForm({ onClose }) {
+  const { user } = useAuth();
   const [form,     setForm]     = useState(initialForm);
   const [errors,   setErrors]   = useState({});
   const [loading,  setLoading]  = useState(false);
@@ -155,8 +158,27 @@ export default function ConsultationForm({ onClose }) {
               )}
             </div>
 
-            {/* ── Success State ── */}
-            {success ? (
+            {/* ── Not Logged In ── */}
+            {!user ? (
+              <div className="text-center py-8">
+                <div className="text-5xl mb-4">🔐</div>
+                <h3 className="text-white font-semibold text-lg mb-2">Login Required</h3>
+                <p className="text-gray-400 text-sm mb-6">
+                  Please login or register to request a free consultation.
+                </p>
+                <div className="flex gap-3 justify-center">
+                  <Link to="/login" onClick={onClose}
+                    className="btn-gold px-6 py-2.5 text-sm inline-block">
+                    Login
+                  </Link>
+                  <Link to="/register" onClick={onClose}
+                    className="btn-outline px-6 py-2.5 text-sm inline-block">
+                    Register
+                  </Link>
+                </div>
+              </div>
+            ) : /* ── Success State ── */
+            success ? (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
