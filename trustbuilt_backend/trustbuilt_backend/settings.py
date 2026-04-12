@@ -143,6 +143,7 @@ EMAIL_USE_TLS       = True
 EMAIL_HOST_USER     = config('EMAIL_HOST_USER',     default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL  = config('DEFAULT_FROM_EMAIL',  default=EMAIL_HOST_USER)
+EMAIL_TIMEOUT       = 5
 
 # Use real SMTP only if credentials are provided, otherwise log to console
 if EMAIL_HOST_USER and EMAIL_HOST_PASSWORD:
