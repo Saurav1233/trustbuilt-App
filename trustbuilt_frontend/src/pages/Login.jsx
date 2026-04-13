@@ -55,8 +55,20 @@ export default function Login() {
         navigate(from, { replace: true });
       }
     } catch (err) {
-      const msg = err.response?.data?.detail || err.message || 'Invalid email or password.';
-      setApiError(msg);
+      const status = err.response?.status;
+      const detail = err.response?.data?.detail || '';
+    
+      if (status === 401 || detail.toLowerCase().includes('no active account')) {
+        setApiError('❌ Incorrect email or password. Please try again.');
+      } else if (status === 400) {
+        setApiError('❌ Invalid credentials. Please check your email and password.');
+      } else if (status === 500) {
+        setApiError('⚠️ Server error. Please try again in a moment.');
+      } else if (!err.response) {
+        setApiError('⚠️ Network error. Please check your connection.');
+      } else {
+        setApiError('❌ Incorrect email or password. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
