@@ -72,6 +72,10 @@ if os.environ.get('DATABASE_URL'):
 
 AUTH_USER_MODEL = 'api.User'
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -91,13 +95,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # ── CORS ──────────────────────────────────────────────────────────────────────
-CORS_ALLOWED_ORIGINS = config(
-    'CORS_ALLOWED_ORIGINS',
-    default='http://localhost:5173'
-).split(',')
-
-CORS_ALLOW_ALL_ORIGINS = True   # allows Vercel + any frontend origin
+CORS_ALLOW_ALL_ORIGINS = False   # allows Vercel + any frontend origin
 CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",                     # local dev
+    "https://trustbuilt-app-noas.vercel.app",             # your frontend
+]
+
 
 CORS_ALLOW_HEADERS = [
     'accept',

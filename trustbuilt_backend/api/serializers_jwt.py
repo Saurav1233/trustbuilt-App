@@ -1,6 +1,10 @@
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate
+from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.response import Response
+from rest_framework import status
 
 User = get_user_model()
 
@@ -8,30 +12,27 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
     username_field = User.EMAIL_FIELD
 
     def validate(self, attrs):
-        # attrs key is 'email' not 'username'
-        credentials = {
-            'email': attrs.get('email'),
-            'password': attrs.get('password'),
-        }
+        email = attrs.get('email')
+        password = attrs.get('password')
 
-        user = None
-        try:
-            user = User.objects.get(email=credentials['email'])
-        except User.DoesNotExist:
-            raise Exception('No account found with this email.')
+        user = authenticate(
+            request=self.context.get('request'),
+            email=email,
+            password=password
+        )
 
-        if not user.check_password(credentials['password']):
-            raise Exception('Invalid password.')
+        if not user:
+            raise AuthenticationFailed('Invalid email or password')
 
         if not user.is_active:
-            raise Exception('This account is inactive.')
+            raise AuthenticationFailed('Account is inactive')
 
         refresh = self.get_token(user)
-        data = {
+
+        return {
             'refresh': str(refresh),
             'access': str(refresh.access_token),
         }
-        return data
 
     @classmethod
     def get_token(cls, user):
@@ -43,3 +44,12 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class EmailTokenObtainPairView(TokenObtainPairView):
     serializer_class = EmailTokenObtainPairSerializer
+
+    def post(self, request, *args, **kwargs):
+        try:
+            return super().post(request, *args, **kwargs)
+        except Exception:
+            return Response(
+                {"detail": "Invalid email or password"},
+                status=401
+            )
