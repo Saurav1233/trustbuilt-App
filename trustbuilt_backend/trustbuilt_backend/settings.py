@@ -8,7 +8,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY    = config('SECRET_KEY', default='django-insecure-change-me-in-production')
 DEBUG         = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*').split(',')
+ALLOWED_HOSTS = [
+    "api.trustbuilt.in",
+    "trustbuilt.in",
+    "www.trustbuilt.in",
+    "trustbuilt-fullstack.onrender.com",
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -54,6 +59,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'trustbuilt_backend.wsgi.application'
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # ── Database ──────────────────────────────────────────────────────────────────
 # SQLite for local dev; PostgreSQL on Render via DATABASE_URL env var
@@ -99,8 +105,16 @@ CORS_ALLOW_ALL_ORIGINS = False   # allows Vercel + any frontend origin
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",                     # local dev
-    "https://trustbuilt-app-noas.vercel.app",             # your frontend
+    "http://localhost:5173",
+    "https://trustbuilt-app-noas.vercel.app",
+    "https://trustbuilt.in",
+    "https://www.trustbuilt.in",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://api.trustbuilt.in",
+    "https://trustbuilt.in",
+    "https://www.trustbuilt.in",
 ]
 
 
