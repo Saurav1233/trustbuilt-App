@@ -6,14 +6,16 @@ const stagger = { show: { transition: { staggerChildren: 0.12 } } };
 
 const bangaloreTeam = [
   {
-    initials: 'AK', color: 'bg-yellow-600',
-    name: 'Arjun Kumar', role: 'Co-Founder & CEO',
+    initials: 'TS', color: 'bg-yellow-600',
+    name: 'Triveni Singh', role: 'Co-Founder & CEO',
     bio: '10+ years in PR & brand strategy. Former consultant to Fortune 500 companies.',
   },
   {
-    initials: 'SM', color: 'bg-teal-600',
-    name: 'Sneha Mehta', role: 'Head of Digital',
-    bio: 'Certified Google & Meta ads specialist with ₹10Cr+ managed ad spend.',
+    initials: 'SM',
+    color: 'bg-teal-600',
+    name: 'Saurav Mishra',
+    role: 'Website Developer',
+    bio: 'Skilled website developer experienced in building responsive, scalable, and high-performance web applications using modern technologies like React, Django, and REST APIs.',
   },
   {
     initials: 'RN', color: 'bg-purple-500',
@@ -24,9 +26,9 @@ const bangaloreTeam = [
 
 const rewaTeam = [
   {
-    initials: 'VP', color: 'bg-yellow-500',
-    name: 'Vikram Patel', role: 'Regional Head — Rewa',
-    bio: 'Local business expert with strong community connections across MP.',
+    initials: 'GS', color: 'bg-yellow-500',
+    name: 'Gaurav Singh', role: 'Director — Rewa',
+    bio: 'Experienced regional director with deep expertise in managing operations and driving business growth in Rewa, backed by strong local market knowledge and community engagement.',
   },
   {
     initials: 'DT', color: 'bg-green-600',
